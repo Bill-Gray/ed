@@ -109,7 +109,7 @@ void update_clock( void)
 
 int cursor_choice[2] = { 1, 2};
 
-/* #define SHOW_INSERT_DELETE_VIA_COLOR       1    */
+#define SHOW_INSERT_DELETE_VIA_COLOR       1
 
 void show_efile( EFILE *efile)
 {
@@ -288,6 +288,10 @@ void show_efile( EFILE *efile)
       }
    update_scr( );
 /* curs_set( cursor_choice[insert]);   */
+#ifdef SHOW_INSERT_DELETE_VIA_COLOR
+   move( 0, 29);
+#else
    curs_set( insert ? 2 : 1);
    move( cursor_y, cursor_x);
+#endif
 }
