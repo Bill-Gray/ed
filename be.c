@@ -4,6 +4,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#ifdef __linux
+   #define USE_JOYSTICK
+   #include <linux/joystick.h>
+   #include <sys/types.h>
+   #include <sys/stat.h>
+   #include <unistd.h>
+   #include <fcntl.h>
+   #define N_JOY_AXES 6
+   #define KEY_JOYSTICK 314159
+   int joy_axes[N_JOY_AXES];
+#endif
 
 #if defined( _WIN32)
    #define PDC_DLL_BUILD
@@ -37,7 +48,6 @@ int min_line_realloc = 15000;
 #else
 int min_line_realloc = 2000;
 #endif
-extern FILE *random_file;
 extern int xscr, yscr;     /* size of screen; default xscr=80, yscr=25 */
 extern int color[], use_mac;
 #ifdef USE_MOUSE
@@ -47,42 +57,59 @@ static MOUSE mouse;
 
 #define CLOCK_CHAR  *(char far *)((unsigned long) 0x46c)
 
-#ifdef USE_MYCURSES
-static int curses_kbhit( )
-{
-   return( kbhit( ) ? 0: ERR);
-}
-#else
 static int curses_kbhit( )
 {
    int c;
 
    nodelay( stdscr, TRUE);
-#ifndef _WIN32
-// usleep( 100000);        /* .1 second */
-#endif
    c = getch( );
    nodelay( stdscr, FALSE);
    if( c != ERR)     /* no key waiting */
       ungetch( c);
    return( c);
 }
-#endif
-
 
 #ifndef __WATCOMC__
          /* for Watcom C,  extended_getch() has been */
          /* moved to curs_ext.cpp */
 int extended_getch( void)
 {
-#ifdef RANDOM_FILE
-   static int prev_c;
-#endif
    int c = ERR;
    time_t t = time( NULL);
 
    while( c == ERR)
       {
+#ifdef USE_JOYSTICK
+      static int joy_fd, tried_opening_joy;
+      struct js_event jse;
+      int i;
+
+      if( !tried_opening_joy)
+         {
+         const char *joystick_devname = "/dev/input/js0";
+
+         joy_fd = open( joystick_devname, O_RDONLY | O_NONBLOCK);
+         tried_opening_joy = 1;
+         }
+      if( joy_fd >= 0)
+         while( read( joy_fd, &jse, sizeof( jse)) == sizeof( jse))
+            switch( jse.type)
+               {
+               case JS_EVENT_AXIS:
+                  joy_axes[jse.number] = jse.value;
+//                printf( "Axis %d, val %d\n", jse.number, jse.value);
+                  break;
+               default:
+                  break;
+               }
+      for( i = 0; i < 2; i++)
+         if( joy_axes[i])
+            {
+            usleep( 50000);
+            return( KEY_JOYSTICK);
+            }
+#endif         /* USE_JOYSTICK */
+
 #ifdef __WATCOMC__
       if( kbhit( ))
          {
@@ -91,7 +118,9 @@ int extended_getch( void)
             c = getch( ) + 256;
          }
 #else
+      nodelay( stdscr, TRUE);
       c = getch( );
+      nodelay( stdscr, FALSE);
 #if !defined( _WIN32)
       if( c == 27)
          {
@@ -111,27 +140,12 @@ int extended_getch( void)
          if( stdscr)
             update_clock( );
          }
+      if( c == ERR)
+         usleep( 100000);
       }
    assert( c > 0);
    assert( c != 195);
 
-#ifdef RANDOM_FILE
-   if( c != prev_c && random_file)
-      {
-      char z = CLOCK_CHAR;
-      unsigned count = (unsigned)prev_c;
-      static char buff[16];
-      static unsigned loc;
-
-      while( z == CLOCK_CHAR)
-         count++;
-      buff[loc & 0x0f] ^= (char)(count ^ (count >> 8));
-      loc++;
-      if( !(loc & 0x0f))
-         fwrite( buff, 16, 1, random_file);
-      prev_c = c;
-      }
-#endif            /* RANDOM_FILE                */
    return( c);
 }
 #endif            /* MOVED_TO_CURS_EXT_DOT_CPP  */
@@ -357,7 +371,8 @@ int main( int argc, char **argv)
       curr_file->message = "BE Text Editor Version 0.0   Copyright (c) Project Pluto 1993";
    while( curr_file)
       {
-//    if( curses_kbhit( ) != ERR)
+//    c = curses_kbhit( );
+      if( curses_kbhit( ) == ERR)
          show_efile( curr_file);
       c = extended_getch( );
       curr_file->message = NULL;

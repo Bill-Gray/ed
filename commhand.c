@@ -38,7 +38,6 @@ int default_dos_mode, tabs[60], centering = 2;
 int n_redefs = 0;
 int tab_xlate = 3;
 char **redefs_from, **redefs_to;
-FILE *random_file;
 extern int xscr, yscr;     /* size of screen; default xscr=80, yscr=25 */
 
 static int find_in_string( const LETTER *s, int max, const char *search,
@@ -393,12 +392,6 @@ int handle_command( EFILE **curr_file, char *comm)
          efile->message = "Checks out OK";
          return( 0);
          }
-      }
-
-   if( !_memicmp( comm, "random=", 7))
-      {
-      random_file = fopen( comm + 7, "ab");
-      return( 0);
       }
 
    if( !_memicmp( comm, "rev ", 4))

@@ -3,6 +3,13 @@
 #include <string.h>
 #include <stdlib.h>
 
+#ifdef __linux
+   #define USE_JOYSTICK
+   #define N_JOY_AXES 6
+   #define KEY_JOYSTICK 314159
+   extern int joy_axes[];
+#endif
+
 #if defined( _WIN32)
    #define PDC_DLL_BUILD
 #endif
@@ -88,6 +95,19 @@ void use_key( EFILE **curr_file, int key)
    line = efile->lines + efile->y;
    switch( key)
       {
+#if defined( USE_JOYSTICK)
+      case KEY_JOYSTICK:
+         if( joy_axes[0] > 0)
+            efile->x += 1 + joy_axes[0] / 1000;
+         if( joy_axes[0] < 0)
+            efile->x -= 1 - joy_axes[0] / 1000;
+         if( joy_axes[1] > 0)
+            efile->y += 1 + joy_axes[1] / 1000;
+         if( joy_axes[1] < 0)
+            efile->y -= 1 - joy_axes[1] / 1000;
+         break;
+#endif
+
 #if defined( KEY_MOUSE)
       case KEY_MOUSE:
          {
