@@ -60,7 +60,7 @@ static void update_scr( void)
            end - i < xscr - 10 && (new_scr[end] >> ATTR_SHIFT) == attr
            && end / xscr == i / xscr)
          end++;
-//    if( i != prev_loc)
+      if( i != prev_loc)
          move( i / xscr, i % xscr);
       prev_loc = end;
       if( attr != prev_attr)
@@ -113,7 +113,7 @@ int cursor_choice[2] = { 1, 2};
 
 void show_efile( EFILE *efile)
 {
-   char buf[81], *timebuff, *s;
+   char buf[81], *timebuff, *s = NULL;
    scrchar_t *display_loc, *screen_start, attr;
    LETTER *lett;
    int i, line, width, cursor_x, cursor_y, size_needed;
