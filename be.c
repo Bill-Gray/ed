@@ -120,6 +120,14 @@ int extended_getch( void)
 #else
       nodelay( stdscr, TRUE);
       c = getch( );
+      if( (c & 0xe0) == 0xc0)   /* two-byte UTF8 */
+         c = (getch( ) & 0x3f) | ((c & 0x1f) << 6);
+      else if( (c & 0xf0) == 0xe0)     /* three-byte UTF8 */
+         {
+         c = (getch( ) & 0x3f) | ((c & 0x0f) << 6);
+         c = (getch( ) & 0x3f) | (c << 6);
+         }
+
       nodelay( stdscr, FALSE);
 #if !defined( _WIN32)
       if( c == 27)

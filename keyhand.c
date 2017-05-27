@@ -1037,7 +1037,7 @@ void use_key( EFILE **curr_file, int key)
             }
          }
       default:                      /* text entered */
-         if( key < 256)
+//       if( key < 256)
             {
             if( efile->command_loc == -1)
                {
@@ -1085,11 +1085,11 @@ void use_key( EFILE **curr_file, int key)
                efile->command_loc++;
                }
             }
-         else     /* key >= 256 */
-            {
-            sprintf( errbuff, "Key %d (%x) not interpreted", key, key);
-            efile->message = errbuff;
-            }
+//       else     /* key >= 256 */
+//          {
+//          sprintf( errbuff, "Key %d (%x) not interpreted", key, key);
+//          efile->message = errbuff;
+//          }
          break;
       }
 }
