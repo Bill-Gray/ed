@@ -186,46 +186,43 @@ EFILE *read_efile( const char *name)
          for( j = 0; j < len; j++, tptr++)
             if( !(*tptr & 0x80))                   /* handle UTF8 encoding */
                line->str[k++] = (LETTER)buff[j];
+            else if( (*tptr & 0xe0) == 0xc0)
+               {                  /* U+0080 to U+07ff */
+               line->str[k++] = ((LETTER)( *tptr & 0x1f) << 6)
+                      | (LETTER)( tptr[1] & 0x3f);
+               tptr++;
+               j++;
+               }
+            else if( (*tptr & 0xf0) == 0xe0)
+               {                  /* U+0800 to U+ffff */
+               line->str[k] = ((LETTER)( *tptr & 0x0f) << 12)
+                      | (LETTER)( tptr[1] & 0x3f) << 6
+                      | (LETTER)( tptr[2] & 0x3f);
+               if( line->str[k] != (LETTER)0xfeff)
+                  k++;        /* skip the byte-order mark */
+               tptr++;
+               tptr++;
+               j++;
+               j++;
+               }
+            else if( (*tptr & 0xf8) == 0xf0)
+               {                  /* U+10000 to U+10ffff: SMP */
+               line->str[k++] = ((LETTER)( *tptr & 0x07) << 18)
+                      | (LETTER)( tptr[1] & 0x3f) << 12
+                      | (LETTER)( tptr[2] & 0x3f) << 6
+                      | (LETTER)( tptr[3] & 0x3f);
+               tptr++;
+               tptr++;
+               tptr++;
+               j++;
+               j++;
+               j++;
+               }
             else
-               switch( *tptr & 0xe0)
-                  {
-                  case 0xc0:
-                     {                  /* U+0080 to U+07ff */
-                     line->str[k++] = ((LETTER)( *tptr & 0x1f) << 6)
-                            | (LETTER)( tptr[1] & 0x3f);
-                     tptr++;
-                     j++;
-                     }
-                     break;
-                  case 0xe0:
-                     {                  /* U+0800 to U+ffff */
-                     line->str[k++] = ((LETTER)( *tptr & 0x0f) << 12)
-                            | (LETTER)( tptr[1] & 0x3f) << 6
-                            | (LETTER)( tptr[2] & 0x3f);
-                     tptr++;
-                     tptr++;
-                     j++;
-                     j++;
-                     }
-                     break;
-                  case 0xf0:
-                     {                  /* U+10000 to U+10ffff: SMP */
-                     line->str[k++] = ((LETTER)( *tptr & 0x07) << 18)
-                            | (LETTER)( tptr[1] & 0x3f) << 12
-                            | (LETTER)( tptr[2] & 0x3f) << 6
-                            | (LETTER)( tptr[3] & 0x3f);
-                     tptr++;
-                     tptr++;
-                     tptr++;
-                     j++;
-                     j++;
-                     j++;
-                     }
-                     break;
-                  default:
-                     printf( "??? bad utf8\n");
-                     break;
-                  break;
+               {
+               line->str[k++] = '?';    /* mark as undeciphered */
+               tptr++;
+               j++;
                }
          line->size = k;
          }
