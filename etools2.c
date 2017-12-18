@@ -89,12 +89,14 @@ int sort_file( EFILE *efile, int start_x, int start_y, int n_lines, int order)
    if( n_lines <= 0)
       return( -1);
    lines = efile->lines + start_y;
-   for( gap=1; gap < n_lines / 3; gap = gap * 3 + 1);
    for( i = 0; i < n_lines; i++)
       if( lines[i].str)
          lines[i].str[ lines[i].size] = '\0';
    sort_column = start_x;
 #ifndef ORIGINAL_SHELL_SORT_CODE
+   gap = 4;
+   while( gap < n_lines)
+      gap = gap * 8 / 3 + 1;
    while( gap)          /* Shell sort the lines */
       {
       int j;
@@ -109,7 +111,7 @@ int sort_file( EFILE *efile, int start_x, int start_y, int n_lines, int order)
             memcpy( (void *)tptr1, (void *)tptr2, sizeof( LINE));
             memcpy( (void *)tptr2, (void *)&tline, sizeof( LINE));
             }
-      gap /= 3;
+      gap = gap * 3 / 8;
       }
 #else
    my_mergesort( (char *)lines, n_lines, sizeof( LINE), line_compare);
