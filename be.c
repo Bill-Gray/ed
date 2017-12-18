@@ -137,6 +137,12 @@ int extended_getch( void)
          nodelay( stdscr, FALSE);
          if( c == ERR)    /* no second key found */
             c = 27;       /* just a plain ol' Escape */
+         else if( c == 91)    /* unhandled escape code */
+            {
+            while( curses_kbhit( ) != ERR)  /* clear remainder of escape code */
+               getch( );
+            c = ERR;
+            }
          else
             c += (ALT_A - 'a');
          }
