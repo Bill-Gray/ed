@@ -4,8 +4,9 @@ all: be
 
 OBJS=be.o commhand.o etools.o etools2.o keyhand.o showfile.o undo.o
 
-CC=gcc
+CC=cc
 CURSES_LIB=-lncursesw
+RM=rm -f
 
 ifdef X
  ADDED_CFLAGS=-DXCURSES -DPDC_WIDE -I../PDCurses
@@ -25,7 +26,7 @@ install:
 	cp be         /usr/local/bin
 
 uninstall:
-	rm -f /usr/local/bin/be
+	$(RM) /usr/local/bin/be
 
 .c.o:
 	$(CC) $(CFLAGS) $(ADDED_CFLAGS) $<
