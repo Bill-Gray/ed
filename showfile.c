@@ -12,7 +12,9 @@
 #ifdef __WATCOMC__
 #include "mycurses.h"
 #else
-#include <curses.h>
+#define _XOPEN_SOURCE_EXTENDED 1
+#include <wchar.h>
+#include <ncursesw/curses.h>
 #endif
 
 #ifdef DEBUG_MEM
