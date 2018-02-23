@@ -153,6 +153,7 @@ EFILE *read_efile( const char *name)
          if( realloc_lines( rval, i))
             {
             free_efile( rval);
+            free( buff);
             fclose( ifile);
             return( NULL);
             }
@@ -179,6 +180,7 @@ EFILE *read_efile( const char *name)
          if( !line->str)
             {
             free_efile( rval);
+            free( buff);
             fclose( ifile);
             return( NULL);
             }
