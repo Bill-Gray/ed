@@ -97,8 +97,8 @@ int extended_getch( void)
                {
                case JS_EVENT_AXIS:
                   joy_axes[jse.number] = jse.value;
-//                printf( "Axis %d, val %d\n", jse.number, jse.value);
-                  break;
+/*                printf( "Axis %d, val %d\n", jse.number, jse.value);
+*/                break;
                default:
                   break;
                }
@@ -385,8 +385,8 @@ int main( int argc, char **argv)
       curr_file->message = "BE Text Editor Version 0.0   Copyright (c) Project Pluto 1993";
    while( curr_file)
       {
-//    c = curses_kbhit( );
-      if( curses_kbhit( ) == ERR)
+/*    c = curses_kbhit( );
+*/    if( curses_kbhit( ) == ERR)
          show_efile( curr_file);
       c = extended_getch( );
       curr_file->message = NULL;

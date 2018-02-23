@@ -54,12 +54,12 @@
 #define ALT_LEFT      0x21e
 #define ALT_UP        0x233
 #define ALT_DN        0x20a
-// #define CTL_LEFT      (ALT_BASE + 257)
-// #define CTL_RIGHT     (ALT_BASE + 258)
-// #define CTL_PGUP      (ALT_BASE + 259)
-// #define CTL_PGDN      (ALT_BASE + 260)
-// #define CTL_DEL       (ALT_BASE + 261)
-
+/* #define CTL_LEFT      (ALT_BASE + 257)
+   #define CTL_RIGHT     (ALT_BASE + 258)
+   #define CTL_PGUP      (ALT_BASE + 259)
+   #define CTL_PGDN      (ALT_BASE + 260)
+   #define CTL_DEL       (ALT_BASE + 261)
+*/
 #define CTL_PAD2     0x020c
 #define CTL_PAD3     0x0225
 #define CTL_PAD4     0x0220
