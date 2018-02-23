@@ -143,6 +143,7 @@ static int find_occurrence( const EFILE *efile, const char *search, int *x, int 
    int x1, y1;
    LINE *line;
 
+   assert( efile);
    if( *y < 0)
       (*y)++;
    if( *y >= efile->n_lines)
@@ -266,7 +267,7 @@ int insert_file( EFILE *efile, char *filename)
 {
    EFILE *get_file = read_efile( filename);
 
-   if( get_file)
+   if( efile && get_file)
       {
       int i;
 
@@ -353,7 +354,8 @@ int handle_command( EFILE **curr_file, char *comm)
    else
       efile = NULL;
 
-   if( !strcmp( comm, "?") || !_stricmp( comm, "file"))   /* check for mismatches */
+   if( ( !strcmp( comm, "?") || !_stricmp( comm, "file"))   /* check for mismatches */
+                  && efile)
       {
       const int prev_x = efile->x;
       const int prev_y = efile->y;
@@ -394,7 +396,7 @@ int handle_command( EFILE **curr_file, char *comm)
          }
       }
 
-   if( !_memicmp( comm, "rev ", 4))
+   if( efile && !_memicmp( comm, "rev ", 4))
       {
       int i = efile->y, j = efile->y + atoi( comm + 4) - 1;
 
@@ -412,7 +414,7 @@ int handle_command( EFILE **curr_file, char *comm)
       return( 0);
       }
 
-   if( !_memicmp( comm, "numb ", 5))
+   if( efile && !_memicmp( comm, "numb ", 5))
       {
       LETTER *tptr = efile->lines[efile->y].str + efile->x;
       int i, j, line0 = letter_atoi( tptr), len;
@@ -453,7 +455,7 @@ int handle_command( EFILE **curr_file, char *comm)
       return( 0);
       }
 #endif
-   if( !_memicmp( comm, "mac ", 4))
+   if( efile && !_memicmp( comm, "mac ", 4))
       {
       FILE *ifile = fopen( comm + 4, "rb");
 
@@ -519,7 +521,7 @@ int handle_command( EFILE **curr_file, char *comm)
       return( 0);
       }
 
-   if( !_stricmp( comm, "scr 2 v"))
+   if( efile && !_stricmp( comm, "scr 2 v"))
       {
       efile->xsize = xscr / 2;
       efile->ysize = yscr - 2;
@@ -541,11 +543,12 @@ int handle_command( EFILE **curr_file, char *comm)
       return( 0);
       }
 
-   if( !_stricmp( comm, "fc"))
+   if( efile && !_stricmp( comm, "fc"))
       {
       int rval = 0;
       EFILE *next = efile->next_file;
 
+      assert( efile);
       if( !next || next == efile)
          {
          efile->message = "No comparison possible";
@@ -582,7 +585,7 @@ int handle_command( EFILE **curr_file, char *comm)
       return( rval);
       }
 
-   if( !_memicmp( comm, "scr ", 4) && !comm[5])
+   if( efile && !_memicmp( comm, "scr ", 4) && !comm[5])
       {
       int i = 0, n_splits = comm[4] - '0';
       EFILE *end_ptr = efile;
@@ -604,7 +607,7 @@ int handle_command( EFILE **curr_file, char *comm)
       return( 0);
       }
 
-   if( !_stricmp( comm, "scr1"))
+   if( efile && !_stricmp( comm, "scr1"))
       {
       EFILE *end_ptr = efile;
 
@@ -624,6 +627,7 @@ int handle_command( EFILE **curr_file, char *comm)
 
    if( !_stricmp( comm, "file") || !_stricmp( comm, "ffile"))
       {
+      assert( efile);
       if( write_efile( efile))
          {
          efile->message = "FILE NOT SUCCESSFULLY WRITTEN";
@@ -635,7 +639,7 @@ int handle_command( EFILE **curr_file, char *comm)
 
 #ifndef __WATCOMC__
 #ifndef __GNUC__
-   if( !_stricmp( comm, "chmod"))
+   if( efile && !_stricmp( comm, "chmod"))
       {
       if( _chmod( efile->filename, S_IWRITE | S_IREAD))
          efile->message = "PERMISSIONS NOT SUCCESSFULLY CHANGED";
@@ -646,6 +650,7 @@ int handle_command( EFILE **curr_file, char *comm)
 
    if( !_stricmp( comm, "save"))
       {
+      assert( efile);
       if( !write_efile( efile))
          {
          efile->message = "File written";
@@ -658,6 +663,7 @@ int handle_command( EFILE **curr_file, char *comm)
 
    if( !_stricmp( comm, "qq"))
       {
+      assert( efile);
       if( efile->next_file == efile)      /* last file in ring */
          *curr_file = NULL;
       else
@@ -668,6 +674,7 @@ int handle_command( EFILE **curr_file, char *comm)
 
    if( !_stricmp( comm, "top"))
       {
+      assert( efile);
       efile->y = efile->x = efile->top = efile->left = 0;
       return( 0);
       }
@@ -700,6 +707,7 @@ int handle_command( EFILE **curr_file, char *comm)
       {
       EFILE *next_file;
 
+      assert( efile);
       if( *comm == 'k')
          next_file = read_efile( comm + 2);
       else
@@ -716,14 +724,14 @@ int handle_command( EFILE **curr_file, char *comm)
       return( 0);
       }
 
-   if( !memcmp( comm, "get ", 4))
+   if( efile && !memcmp( comm, "get ", 4))
       {
       if( insert_file( efile, comm + 4))
          efile->message = "File not found";
       return( 0);
       }
 
-   if( !_stricmp( comm, "k"))
+   if( efile && !_stricmp( comm, "k"))
       {
       *curr_file = efile->next_file;
       return( 0);
@@ -773,7 +781,7 @@ int handle_command( EFILE **curr_file, char *comm)
       }
 #endif
 
-   if( !memcmp( comm, "fn ", 3))    /* change in file name */
+   if( efile && !memcmp( comm, "fn ", 3))    /* change in file name */
       {
       efile->filename = (char *)realloc( efile->filename, strlen( comm + 2));
       strcpy( efile->filename, comm + 3);
@@ -783,9 +791,6 @@ int handle_command( EFILE **curr_file, char *comm)
    if( *comm == '/' || *comm == '\\' || *comm == '~' || *comm == '!')       /* search time */
       {
       int direction = 1, blocking_mode = 0;
-#ifdef OBSOLETE_NOW
-      const int x = efile->x, y = efile->y;
-#endif
 
       if( *comm == '!')
          {
@@ -797,20 +802,9 @@ int handle_command( EFILE **curr_file, char *comm)
          direction = -1;
          comm++;
          }
+      assert( efile);
       find_occurrence_and_move( efile, comm + 1, *comm == '\\', direction,
                               blocking_mode);
-#ifdef OBSOLETE_NOW
-      if( !find_occurrence( efile, comm + 1, &x, &y, *comm == '\\', direction,
-                              blocking_mode))
-         {
-         efile->x = x;
-         efile->y = y;
-         efile->top = efile->y - efile->ysize / 2;
-         efile->command_loc = -1;
-         }
-      else
-         efile->message = "String not found";
-#endif
       return( 0);
       }
 
@@ -830,6 +824,7 @@ int handle_command( EFILE **curr_file, char *comm)
       const int in_block_mode = (*comm == 'b');
       const int ask_user = (*comm == 's' || comm[1] == 's');
 
+      assert( efile);
       str = comm + 1;
       while( *str && str[-1] != ' ')
          str++;
@@ -840,6 +835,7 @@ int handle_command( EFILE **curr_file, char *comm)
          char search_str[80], rep_str[80];
          int x, y, n_changes = 0, c = 0;
 
+         assert( efile);
          memcpy( search_str, str + 1, i - 1);
          search_str[i - 1] = '\0';
          memcpy( rep_str, str + i + 1, j - i - 1);
@@ -893,6 +889,7 @@ int handle_command( EFILE **curr_file, char *comm)
 
    if( !memcmp( comm, "mode=", 5))
       {
+      assert( efile);
       if( comm[5] == 'd')
          {
          efile->dos_mode = 1;
@@ -950,6 +947,7 @@ int handle_command( EFILE **curr_file, char *comm)
 
    if( *comm == ':')    /* absolute line reference */
       {
+      assert( efile);
       efile->y = atoi( comm + 1) - 1;
       efile->command_loc = -1;
       return( 0);
@@ -958,6 +956,7 @@ int handle_command( EFILE **curr_file, char *comm)
    if( (*comm >= '0' && *comm <= '9') || *comm == '-')
                                   /* relative line reference */
       {
+      assert( efile);
       efile->y += atoi( comm);
       efile->command_loc = -1;
       return( 0);
@@ -967,6 +966,7 @@ int handle_command( EFILE **curr_file, char *comm)
       {
       int curr_state = 0, y;
 
+      assert( efile);
       for( y = efile->y; y < efile->n_lines; y++)
          if( y && efile->lines[y].str)
             curr_state = html_to_txt( efile->lines + y, curr_state);
@@ -1035,8 +1035,10 @@ int handle_command( EFILE **curr_file, char *comm)
 
    if( !memcmp( comm, "sort ", 5))
       {
-      int n_lines, order, y = efile->y;
+      int n_lines, order, y;
 
+      assert( efile);
+      y = efile->y;
       if( comm[5] == '*')        /* sort em all */
          n_lines = efile->n_lines;
       else if( comm[5] == 'm')      /* sort _marked_ lines */
