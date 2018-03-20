@@ -419,7 +419,7 @@ int handle_command( EFILE **curr_file, char *comm)
       LETTER *tptr = efile->lines[efile->y].str + efile->x;
       int i, j, line0 = letter_atoi( tptr), len;
       int n_lines = 30000, step = 1;
-      char tbuff[10];
+      char tbuff[13];
 
       sscanf( comm + 5, "%d %d", &n_lines, &step);
       for( len = 0; tptr[len] >= '0' && tptr[len] <= '9'; len++)
@@ -429,7 +429,7 @@ int handle_command( EFILE **curr_file, char *comm)
          {
          LETTER *tlett;
 
-         sprintf( tbuff, "%08ld", (long)line0);
+         snprintf( tbuff, sizeof( tbuff), "%08ld", (long)line0);
          reset_line_size( efile, i, efile->x + len + 5);
          tlett = efile->lines[i].str + efile->x;
          for( j = 0; j < len; j++)
@@ -765,7 +765,7 @@ int handle_command( EFILE **curr_file, char *comm)
       EFILE *next_file;
       char buff[80];
 
-      sprintf( buff, "dir %s > ickywax.ugh", comm + 3);
+      snprintf( buff, sizeof( buff), "dir %s > ickywax.ugh", comm + 3);
       system( buff);
       next_file = read_efile( "ickywax.ugh");
       if( next_file)
@@ -876,10 +876,10 @@ int handle_command( EFILE **curr_file, char *comm)
             efile->message = "Search string not found";
          else
             {
-            static char msg[30];
+            static char msg[40];
 
             efile->message = msg;
-            sprintf( msg, "%d occurrences changed", n_changes);
+            snprintf( msg, sizeof( msg), "%d occurrences changed", n_changes);
             }
          }
       else
