@@ -292,6 +292,14 @@ int main( int argc, char **argv)
       if( !strcmp( argv[i], "-mac"))
          use_mac = 1;
 
+         /* Under Windows, GetModuleFileName() could get us the path
+         to the executable.  Dunno what to do in *BSD.   */
+#ifdef __linux
+   i = (int)readlink( "/proc/self/exe", profname, sizeof( profname));
+   assert( i > 2 && i < (ssize_t)sizeof( profname) - 8);
+   strcpy( profname + i - 2, "profile");
+   profile = fopen( profname, "rb");
+#else
    strcpy( profname, argv[0]);
    for( i = strlen( profname); i >= 0 && profname[i] != '\\' && profname[i] != '/'; i--);
    strcpy( profname + i + 1, "profile");
@@ -308,12 +316,10 @@ int main( int argc, char **argv)
       }
    if( !profile)
       profile = fopen( "c:\\ed\\profile", "rb");
-   profname[i + 1] = '\0';
-   if( profile)
-      {
-      read_profile_file( NULL, profile);
-      fclose( profile);
-      }
+#endif
+   assert( profile);
+   read_profile_file( NULL, profile);
+   fclose( profile);
 
    getmaxyx( stdscr, yscr, xscr);
    for( i = 1; i < argc; i++)
