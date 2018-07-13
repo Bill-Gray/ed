@@ -76,16 +76,25 @@ int realloc_lines( EFILE *efile, int n)
       return( -1);
 }
 
+#if defined( _WIN32)
+   #define DIRMACRO "c:\\utils\\dirmacro"
+   #define PATH_SEPARATOR '\\'
+#else
+   #define DIRMACRO "/home/phred/ed/dirmacro"
+   #define PATH_SEPARATOR '/'
+#endif
+
 static void macroize( char *oname, const char *iname)
 {
    int found_it = 0;
 
-   if( strchr( iname, '\\'))
+   if( strchr( iname, PATH_SEPARATOR))
       {
-      FILE *ifile = fopen( "c:\\utils\\dirmacro", "rb");
+      FILE *ifile = fopen( DIRMACRO, "rb");
       char buff[180];
       int i;
 
+      assert( ifile);
       if( ifile)
          {
          while( !found_it && fgets( buff, sizeof( buff), ifile))
@@ -95,7 +104,7 @@ static void macroize( char *oname, const char *iname)
             buff[i] = '\0';            /* clear trailing CR/LF */
             for( i = 0; buff[i] > ' '; i++)
                ;
-            if( !memcmp( buff, iname, i) && iname[i] == '\\')
+            if( !memcmp( buff, iname, i) && iname[i] == PATH_SEPARATOR)
                {
                strcpy( oname, buff + 4);
 
