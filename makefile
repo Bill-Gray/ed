@@ -23,10 +23,10 @@ be: $(OBJS)
 	$(CC) -o be $(OBJS) $(CURSES_LIB)
 
 install:
-	cp be         /usr/local/bin
+	cp be         $(HOME)/bin
 
 uninstall:
-	$(RM) /usr/local/bin/be
+	$(RM) $(HOME)/bin/be
 
 .c.o:
 	$(CC) $(CFLAGS) $(ADDED_CFLAGS) $<
