@@ -90,10 +90,17 @@ static void macroize( char *oname, const char *iname)
 
    if( strchr( iname, PATH_SEPARATOR))
       {
-      FILE *ifile = fopen( DIRMACRO, "rb");
+      FILE *ifile;
       char buff[180];
       int i;
 
+#if defined( _WIN32)
+      strcpy( buff, "c:\\utils\\dirmacro");
+#else
+      strcpy( buff, getenv( "HOME"));
+      strcat( buff, "/ed/dirmacro");
+#endif
+      ifile = fopen( buff, "rb");
       assert( ifile);
       if( ifile)
          {
@@ -118,6 +125,14 @@ static void macroize( char *oname, const char *iname)
 
    if( !found_it)
       strcpy( oname, iname);
+   if( *oname == '~')
+      {
+      char buff[180];
+
+      strcpy( buff, oname + 1);
+      strcpy( oname, getenv( "HOME"));
+      strcat( oname, buff);
+      }
 }
 
 EFILE *read_efile( const char *name)
