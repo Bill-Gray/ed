@@ -11,19 +11,9 @@ redef e k d:err
 # DOS: redef #499 key #266 #9 { #266 } #259 #266
 redef #4155 key #266 #9 { #266 } #259 #266
 # The above should redef alt-; to insert a pair of braces...
-redef #272 key auth_xxxxxx_(28_jun_09) #331 #331 #331 #331 #331 #331 #331 #331 #331 #331 #331 #331 #331 #331 #331 #331 #331 #331
-# The above redefs Alt-Q for use in credit card orders
-redef #280 key #316 28_Dec_98___Upgr_to_7.0__(check_encl) #316 ROUND_28
-# The above redefs Alt-O to enter a "check encl"
-redef #369 key Thank_you,_________Bill_Gray__________(Project_Pluto)
-# The above redefs Alt-F10 to insert my 'sig'
 redef #284 key http://www.projectpluto.com
 # The above redefs Shift-F8 to show my Web site...
-redef #309 key pluto@projectpluto.com
-# The above remaps Alt-F9 to show my e-mail address
 
-redef #282 key #13 (#335)
-# The above remaps Alt-[ to enter,  insert a (, go to end of line, add )
 # redef #498 key #316 int_main(_const_int_argc,_const_char_**argv)
 redef #4157 key #316 int_main(_const_int_argc,_const_char_**argv)
 # The above remaps Alt-] to insert a default 'main' def
