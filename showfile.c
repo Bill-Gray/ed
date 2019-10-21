@@ -9,12 +9,11 @@
    #define PDC_DLL_BUILD
 #endif
 
-#ifdef __WATCOMC__
-#include "mycurses.h"
+#ifdef PDC_WIDE
+   #include "curses.h"
 #else
-#define _XOPEN_SOURCE_EXTENDED 1
-#include <wchar.h>
-#include <ncursesw/curses.h>
+   #define _XOPEN_SOURCE_EXTENDED 1
+   #include <ncursesw/curses.h>
 #endif
 
 #ifdef DEBUG_MEM
