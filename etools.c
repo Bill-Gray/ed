@@ -42,9 +42,9 @@ int realloc_lines( EFILE *efile, int n)
 {
    LINE *new_lines;
 
-   n += 5;
-   if( efile->lines_alloced >= n)   /* already got enough */
+   if( efile->lines_alloced - 5 >= n)   /* already got enough */
       return( 0);
+   n += 5;
    if( n < min_line_realloc)
       n = min_line_realloc;
    n += LINE_STEP + n / 4;
@@ -101,7 +101,6 @@ static void macroize( char *oname, const char *iname)
       strcat( buff, "/ed/dirmacro");
 #endif
       ifile = fopen( buff, "rb");
-      assert( ifile);
       if( ifile)
          {
          while( !found_it && fgets( buff, sizeof( buff), ifile))
