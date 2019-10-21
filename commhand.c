@@ -8,11 +8,7 @@
    #define PDC_DLL_BUILD
 #endif
 
-#ifdef __WATCOMC__
-   #include "mycurses.h"
-#else
-   #include <curses.h>
-#endif
+#include "curses.h"
 #ifdef _WIN32
  #include <io.h>
  #include <dos.h>
