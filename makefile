@@ -13,6 +13,11 @@ ifdef X
 	CURSES_LIB=-lXCurses -lXaw -lXmu -lXt -lX11 -lSM -lICE -lXext -lXpm
 endif
 
+ifdef VT
+	ADDED_CFLAGS=-DPDC_WIDE -DVT -I$(HOME)/PDCurses
+	CURSES_LIB=$(HOME)/PDCurses/vt/libpdcurses.a
+endif
+
 ifdef CLANG
 	CC=clang -Weverything
 endif
