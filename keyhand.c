@@ -3,8 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#ifdef __linux
-   #define USE_JOYSTICK
+#ifdef USE_JOYSTICK
    #define N_JOY_AXES 6
    #define KEY_JOYSTICK 314159
    extern int joy_axes[];
@@ -14,12 +13,7 @@
    #define PDC_DLL_BUILD
 #endif
 
-#ifdef __WATCOMC__
-   #include "mycurses.h"
-   #include "curs_ext.h"
-#else
-   #include <curses.h>
-#endif
+#include "curses.h"
 
 #ifndef ALT_A
 #include "curs_lin.h"
@@ -1088,14 +1082,13 @@ void use_key( EFILE **curr_file, int key)
             efile->command_loc = strlen( efile->command);
             }
          break;
-#ifdef __WATCOMC__
       case KEY_F(8):     /* show original screens */
          endwin( );
          extended_getch( );
+//       initscr( );
          refresh( );
          full_refresh = 1;
          break;
-#endif
       case KEY_F(9):
          handle_command( curr_file,
                 prev_command[ (queue + N_PREV_COMMANDS - 1) % N_PREV_COMMANDS]);

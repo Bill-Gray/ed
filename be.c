@@ -4,28 +4,25 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+
 #ifdef __linux
-   #define USE_JOYSTICK
-   #include <linux/joystick.h>
-   #include <sys/types.h>
-   #include <sys/stat.h>
    #include <unistd.h>
-   #include <fcntl.h>
-   #define N_JOY_AXES 6
-   #define KEY_JOYSTICK 314159
-   int joy_axes[N_JOY_AXES];
+   #ifdef USE_JOYSTICK
+      #include <linux/joystick.h>
+      #include <sys/types.h>
+      #include <sys/stat.h>
+      #include <fcntl.h>
+      #define N_JOY_AXES 6
+      #define KEY_JOYSTICK 314159
+      int joy_axes[N_JOY_AXES];
+   #endif
 #endif
 
 #if defined( _WIN32)
    #define PDC_DLL_BUILD
 #endif
 
-#ifdef __WATCOMC__
-   #include "mycurses.h"
-   #include <conio.h>
-#else
-   #include "curses.h"
-#endif
+#include "curses.h"
 #include "ed.h"
 
 #ifndef ALT_A
