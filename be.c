@@ -384,8 +384,6 @@ int main( int argc, char **argv)
                   break;
                }
         }
-   if( curr_file)
-      curr_file->message = "BE Text Editor Version 0.0   Copyright (c) Project Pluto 1993";
    while( curr_file)
       {
 /*    c = curses_kbhit( );
