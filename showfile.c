@@ -114,7 +114,7 @@ int cursor_choice[2] = { 1, 2};
 
 void show_efile( EFILE *efile)
 {
-   char buf[81], *timebuff, *s = NULL;
+   char buf[92], *timebuff, *s = NULL;
    scrchar_t *display_loc, *screen_start, attr;
    LETTER *lett;
    int i, line, width, cursor_x, cursor_y, size_needed;
@@ -147,11 +147,12 @@ void show_efile( EFILE *efile)
 
       strncpy( tbuff, efile->filename, 30);
       tbuff[30] = '\0';
-      sprintf( buf, "%-30sLine=%-5d Col=%-5d Size=%-5d           ",
+
+      snprintf( buf, sizeof( buf), "%-30sLine=%-6dCol=%-6dSize=%-16d",
                      tbuff, efile->y + 1, efile->x + 1, efile->n_lines);
       }
    else
-      sprintf( buf, "%-80s", efile->message);
+      snprintf( buf, sizeof( buf), "%-80s", efile->message);
    t = time( NULL);
    timebuff = ctime( &t);
    memcpy( buf + 64, timebuff + 11, 8);
