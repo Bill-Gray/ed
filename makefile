@@ -1,6 +1,5 @@
 # Makefile for 'be' ("Bill's Editor") on Linux
 # See 'bsdmake' for BSD version of this
-all: be
 
 OBJS=be.o commhand.o etools.o etools2.o keyhand.o showfile.o undo.o
 
@@ -18,24 +17,35 @@ ifdef VT
 	CURSES_LIB=$(HOME)/PDCurses/vt/libpdcurses.a
 endif
 
+ifdef W64
+ CC=x86_64-w64-mingw32-g++
+ EXE=.exe
+ LIB_DIR=$(INSTALL_DIR)/win_lib
+ LIBSADDED=-L $(LIB_DIR) -mwindows
+	ADDED_CFLAGS=-DPDC_WIDE -I$(HOME)/PDCurses
+	CURSES_LIB=$(HOME)/PDCurses/wingui/pdcurses.a
+endif
+
 ifdef CLANG
 	CC=clang -Weverything
 endif
 
 CFLAGS=-c -O3 -Wall -Wextra -pedantic
 
-be: $(OBJS)
-	$(CC) -o be $(OBJS) $(CURSES_LIB)
+all: be$(EXE)
+
+be$(EXE): $(OBJS)
+	$(CC) -o be$(EXE) $(OBJS) $(CURSES_LIB)
 
 install:
-	cp be         $(HOME)/bin
+	cp be$(EXE)         $(HOME)/bin
 
 uninstall:
-	$(RM) $(HOME)/bin/be
+	$(RM) $(HOME)/bin/be$(EXE)
 
 .c.o:
 	$(CC) $(CFLAGS) $(ADDED_CFLAGS) $<
 
 clean:
-	$(RM) be
+	$(RM) be$(EXE)
 	$(RM) $(OBJS)

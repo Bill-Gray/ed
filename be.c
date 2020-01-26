@@ -212,9 +212,9 @@ static void memory_error( struct _memory_error *err)
 #endif
 
 #ifdef _WIN32
-int dummy_main( int argc, char **argv)
+int dummy_main( int argc, const char **argv)
 #else
-int main( int argc, char **argv)
+int main( int argc, const char **argv)
 #endif
 {
    EFILE *curr_file = NULL, *next_file;
@@ -226,20 +226,12 @@ int main( int argc, char **argv)
 
    setlocale( LC_ALL, "en_US.UTF-8");
 /* setvbuf( stdout, NULL, _IONBF, 0);        */
-#ifdef DEBUG_MEM
-   if( _stricmp( argv[1], "-c"))
-      set_memory_error_function( memory_error);
-   else
-      {
-      checks_on = 0;
-      set_memory_error_function( NULL);
-      }
-#endif
 #ifdef USE_MOUSE
    mouse.xmin = mouse.xmax = 0;     /* differential mode */
    mouse.sensitivity = 2;
    no_mouse = mouse_initialize( &mouse);
 #endif
+
 
 #if defined( XCURSES)
    resize_term( 50, 98);
@@ -279,6 +271,11 @@ int main( int argc, char **argv)
    init_pair( 13, COLOR_BLACK, COLOR_MAGENTA);
    init_pair( 14, COLOR_WHITE, COLOR_WHITE);
    init_pair( 15, COLOR_RED, COLOR_WHITE);
+#ifdef PDCURSES
+#ifdef PDC_VER_MAJOR   /* so far only seen in 4.0+ */
+    PDC_set_resize_limits( 20, 50, 70, 200);
+#endif
+#endif
 
    keypad( stdscr, 1);
 /*   Unfortunately,  enabling the following means one can't link to */
@@ -428,7 +425,7 @@ int main( int argc, char **argv)
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
                     LPSTR lpszCmdLine, int nCmdShow)
 {
-   char *argv[30];
+   const char *argv[30];
    int i, argc = 1;
 
    argv[0] = "Bill's Editor";

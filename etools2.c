@@ -123,7 +123,7 @@ int sort_file( EFILE *efile, int start_x, int start_y, int n_lines, int order)
 
 #ifdef _WIN32
 #ifdef __WATCOMC__
-EFILE *make_dir_file( char *path)
+EFILE *make_dir_file( const char *path)
 {
    struct find_t c_file;
    EFILE *efile;
@@ -176,7 +176,7 @@ EFILE *make_dir_file( char *path)
    return( efile);
 }
 #else       /* non-OpenWATCOM version follows: */
-EFILE *make_dir_file( char *path)
+EFILE *make_dir_file( const char *path)
 {
    struct _finddata_t c_file;
    EFILE *efile;

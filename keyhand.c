@@ -46,7 +46,7 @@ extern char **redefs_from, **redefs_to;
 int insert = 0;
 void set_video_mode( unsigned mode);      /* in BE.C */
 
-int handle_command( EFILE **curr_file, char *comm);
+int handle_command( EFILE **curr_file, const char *comm);
 int realloc_lines( EFILE *efile, int n);
 int adjust_paragraph( EFILE *efile, int x, int y);   /* etools2.c */
 int find_word_limits( EFILE *efile, int *start, int *end);   /* etools2.c */
@@ -598,9 +598,12 @@ void use_key( EFILE **curr_file, int key)
          break;
       case ALT_T:              /* show curr time */
          {
-         time_t t = time( NULL);
+         const time_t t = time( NULL);
+         char *time_str;
+
+         time_str = ctime( &t);
+         time_str[24] = '\0';
          efile->message = ctime( &t);
-         efile->message[24] = '\0';
          }
          break;
       case ALT_J:              /* join a line */

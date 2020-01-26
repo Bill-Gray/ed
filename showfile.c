@@ -114,7 +114,8 @@ int cursor_choice[2] = { 1, 2};
 
 void show_efile( EFILE *efile)
 {
-   char buf[92], *timebuff, *s = NULL;
+   char buf[92], *timebuff;
+   const char *s = NULL;
    scrchar_t *display_loc, *screen_start, attr;
    LETTER *lett;
    int i, line, width, cursor_x, cursor_y, size_needed;

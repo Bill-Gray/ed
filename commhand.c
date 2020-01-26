@@ -20,7 +20,7 @@
 #include "checkmem.h"
 #endif
 
-EFILE *make_dir_file( char *path);
+EFILE *make_dir_file( const char *path);
 void set_video_mode( unsigned mode);      /* in BE.C */
 int sort_file( EFILE *efile, int start_x, int start_y, int n_lines, int order);
 void use_key( EFILE **curr_file, int key);
@@ -83,7 +83,7 @@ static int find_in_string( const LETTER *s, int max, const char *search,
 }
 
 #if !defined( _WIN32)
-int _memicmp( char *s1, char *s2, int n)
+int _memicmp( const char *s1, const char *s2, int n)
 {
    int c1, c2;
 
@@ -95,7 +95,7 @@ int _memicmp( char *s1, char *s2, int n)
    return( 0);
 }
 
-int _stricmp( char *s1, char *s2)
+int _stricmp( const char *s1, const char *s2)
 {
    int c1, c2;
 
@@ -259,7 +259,7 @@ static int html_to_txt( LINE *line, int curr_state)
    return( curr_state);
 }
 
-int insert_file( EFILE *efile, char *filename)
+int insert_file( EFILE *efile, const char *filename)
 {
    EFILE *get_file = read_efile( filename);
 
@@ -322,7 +322,7 @@ static int mc_visa_checksum( LETTER *str)
 }
 #endif
 
-int handle_command( EFILE **curr_file, char *comm)
+int handle_command( EFILE **curr_file, const char *comm)
 {
    EFILE *efile;
    int i;
@@ -468,7 +468,8 @@ int handle_command( EFILE **curr_file, char *comm)
 
    if( !_memicmp( comm, "key ", 4))
       {
-      char c, *tptr = comm + 4;
+      char c;
+      const char *tptr = comm + 4;
 
       while( (c = *tptr++) != 0)
          {
@@ -682,9 +683,9 @@ int handle_command( EFILE **curr_file, char *comm)
       comm += 6;
       for( i = 0; comm[i] != ' '; i++)
          ;
-      comm[i] = '\0';
       redefs_from[n_redefs] = (char *)malloc( i + 1);
-      strcpy( redefs_from[n_redefs], comm);
+      memcpy( redefs_from[n_redefs], comm, i);
+      redefs_from[n_redefs][i] = '\0';
       comm += i + 1;
       redefs_to[n_redefs] = (char *)malloc( strlen( comm ) + 1);
       strcpy( redefs_to[n_redefs], comm);
@@ -816,7 +817,7 @@ int handle_command( EFILE **curr_file, char *comm)
             || !memcmp( comm, "bch ", 4) || !memcmp( comm, "bsch ", 5))
       {                                  /* global changes */
       int i, j, k;
-      char *str;
+      const char *str;
       const int in_block_mode = (*comm == 'b');
       const int ask_user = (*comm == 's' || comm[1] == 's');
 
