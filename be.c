@@ -151,8 +151,10 @@ int extended_getch( void)
          if( stdscr)
             update_clock( );
          }
+#if !defined( _WIN32)
       if( c == ERR)
          usleep( 100000);
+#endif
       }
    assert( c > 0);
    assert( c != 195);
