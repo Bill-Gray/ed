@@ -1019,10 +1019,18 @@ int handle_command( EFILE **curr_file, const char *comm)
       numeric_sort = 1;
       }
 
-   if( !memcmp( comm, "asort ", 6))
+   if( !memcmp( comm, "csort ", 6))
       {
       extern int numeric_sort;
 
+      comm++;                 /* case-sensitive sort */
+      numeric_sort = 3;
+      }
+
+   if( !memcmp( comm, "asort ", 6))
+      {
+      extern int numeric_sort;
+                 /* sort by absolute value */
       comm++;
       numeric_sort = 2;
       }

@@ -45,6 +45,15 @@ int line_compare( const LINE *a, const LINE *b)
       return( sort_order);
    aptr = a->str + sort_column;
    bptr = b->str + sort_column;
+   if( numeric_sort == 3)        /* case-sensitive comparison */
+      {
+      while( *aptr && (*aptr == *bptr))
+         {
+         aptr++;
+         bptr++;
+         }
+      return( (*aptr - *bptr) * sort_order);
+      }
    if( numeric_sort)
       {
       double aval = letter_atof( aptr);
