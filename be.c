@@ -117,6 +117,8 @@ int extended_getch( void)
 #else
       nodelay( stdscr, TRUE);
       c = getch( );
+                        /* ncurses doesn't do UTF8 decoding */
+#ifndef PDCURSES
       if( (c & 0xe0) == 0xc0)   /* two-byte UTF8 */
          c = (getch( ) & 0x3f) | ((c & 0x1f) << 6);
       else if( (c & 0xf0) == 0xe0)     /* three-byte UTF8 */
@@ -124,6 +126,7 @@ int extended_getch( void)
          c = (getch( ) & 0x3f) | ((c & 0x0f) << 6);
          c = (getch( ) & 0x3f) | (c << 6);
          }
+#endif
 
       nodelay( stdscr, FALSE);
 #if !defined( _WIN32)
@@ -234,25 +237,20 @@ int main( int argc, const char **argv)
    no_mouse = mouse_initialize( &mouse);
 #endif
 
+   printf( "\033\1352;%s\a", argv[1]);
 
 #if defined( XCURSES)
    resize_term( 50, 98);
    Xinitscr( argc, argv);
-   mouse_set(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION);
 #else
    initscr( );
 #endif
-   mousemask( ALL_MOUSE_EVENTS, NULL);
+   mousemask( BUTTON1_PRESSED, NULL);
    cbreak( );
    noecho( );
    clear( );
    raw( );
    refresh( );
-#ifndef __WATCOMC__
-#ifdef MS_DOS
-   mouse_set( BUTTON1_RELEASED | BUTTON2_RELEASED | BUTTON3_RELEASED);
-#endif
-#endif
    start_color( );
 /*   if (can_change_color())          set yellow to be more 'orangish'
         init_color( COLOR_YELLOW, 1000, 500, 0);         */
