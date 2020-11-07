@@ -108,14 +108,6 @@ void update_clock( void)
 #endif
 }
 
-#ifndef __PDCURSES__
-static int PDC_set_title( const char *title)
-{
-   printf( "\033\1352;%s\a", title);
-   return( 0);
-}
-#endif
-
 int cursor_choice[2] = { 1, 2};
 
 #define SHOW_INSERT_DELETE_VIA_COLOR       1
@@ -155,6 +147,7 @@ void show_efile( EFILE *efile)
    if( !efile->message)
       {
       char tbuff[40];
+#ifndef _WIN32
       const char *home = getenv( "HOME");
       const size_t home_len = strlen( home);
 
@@ -164,6 +157,7 @@ void show_efile( EFILE *efile)
          strncpy( tbuff + 1, efile->filename + home_len, 29);
          }
       else
+#endif
          strncpy( tbuff, efile->filename, 30);
       tbuff[30] = '\0';
       snprintf( buf, sizeof( buf), "%-30sLine=%-6dCol=%-6dSize=%-16d",
