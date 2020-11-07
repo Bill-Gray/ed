@@ -15,7 +15,7 @@ extern int xscr, yscr;     /* size of screen; default xscr=80, yscr=25 */
 extern int min_line_realloc;
 int max_line_length = 1024;
 int skipped_bytes = 0;
-int use_mac = 0, max_lines = 800000;
+int use_mac = 0, max_lines = 8000000;
 
 extern EFILE *block_file;      /* there's only one block,  so info on it is global */
 extern int block_x1, block_y1, block_x2, block_y2, is_block;
