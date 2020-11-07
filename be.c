@@ -39,7 +39,6 @@ void update_clock( void);
 void set_video_mode( unsigned mode);      /* in BE.C */
 
 char *bitfont;             /* used in VGA modes */
-static char profname[80];
 #ifdef __WATCOMC__
 int min_line_realloc = 15000;
 #else
@@ -154,10 +153,8 @@ int extended_getch( void)
          if( stdscr)
             update_clock( );
          }
-#if !defined( _WIN32)
       if( c == ERR)
-         usleep( 100000);
-#endif
+         napms( 100);
       }
    assert( c > 0);
    assert( c != 195);
@@ -227,7 +224,10 @@ int main( int argc, const char **argv)
 #ifdef DEBUG_MEM
    int checks_on = 1;
 #endif
-   FILE *profile;
+   FILE *profile = NULL;
+#ifndef _WIN32
+   char profname[80];
+#endif
 
    setlocale( LC_ALL, "en_US.UTF-8");
 /* setvbuf( stdout, NULL, _IONBF, 0);        */
@@ -288,25 +288,26 @@ int main( int argc, const char **argv)
 
          /* Under Windows, GetModuleFileName() could get us the path
          to the executable.  Dunno what to do in *BSD.   */
+#ifndef _WIN32
    strcpy( profname, argv[0]);
    i = (int)strlen( profname);
    while( i >= 0 && profname[i] != '\\' && profname[i] != '/')
-     i--;
-   strcpy( profname + i + 1, "profile");
-   profile = fopen( profname, "rb");
-#ifdef __linux
-   if( !profile)
+      i--;
+   if( profname[i])
       {
-      i = (int)readlink( "/proc/self/exe", profname, sizeof( profname));
-      assert( i > 2 && i < (ssize_t)sizeof( profname) - 8);
-      strcpy( profname + i - 2, "profile");
+      strcpy( profname + i + 1, "profile");
       profile = fopen( profname, "rb");
       }
 #endif
+#ifdef __linux
+   i = (int)readlink( "/proc/self/exe", profname, sizeof( profname));
+   assert( i > 2 && i < (ssize_t)sizeof( profname) - 8);
+   strcpy( profname + i - 2, "profile");
+   profile = fopen( profname, "rb");
+#endif
 
 #ifdef _WIN32              /* a couple of places to try in Win-world */
-   if( !profile)
-      profile = fopen( "c:\\ed\\profile", "rb");
+   profile = fopen( "c:\\ed\\profile", "rb");
    if( !profile)
       profile = fopen( "c:\\users\\john\\ed\\profile", "rb");
 #else                      /* ...and a couple to try in non-Win world */
