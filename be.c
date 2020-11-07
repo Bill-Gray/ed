@@ -236,9 +236,9 @@ int main( int argc, const char **argv)
    mouse.sensitivity = 2;
    no_mouse = mouse_initialize( &mouse);
 #endif
-
-   printf( "\033\1352;%s\a", argv[1]);
-
+#ifndef _WIN32
+   printf( "\033\1352;%s\a", argv[1]);  /* set window title (non MS) */
+#endif
 #if defined( XCURSES)
    resize_term( 50, 98);
    Xinitscr( argc, argv);
@@ -288,16 +288,28 @@ int main( int argc, const char **argv)
 
          /* Under Windows, GetModuleFileName() could get us the path
          to the executable.  Dunno what to do in *BSD.   */
-#ifdef __linux
-   i = (int)readlink( "/proc/self/exe", profname, sizeof( profname));
-   assert( i > 2 && i < (ssize_t)sizeof( profname) - 8);
-   strcpy( profname + i - 2, "profile");
-   profile = fopen( profname, "rb");
-#else
    strcpy( profname, argv[0]);
-   for( i = strlen( profname); i >= 0 && profname[i] != '\\' && profname[i] != '/'; i--);
+   i = (int)strlen( profname);
+   while( i >= 0 && profname[i] != '\\' && profname[i] != '/')
+     i--;
    strcpy( profname + i + 1, "profile");
    profile = fopen( profname, "rb");
+#ifdef __linux
+   if( !profile)
+      {
+      i = (int)readlink( "/proc/self/exe", profname, sizeof( profname));
+      assert( i > 2 && i < (ssize_t)sizeof( profname) - 8);
+      strcpy( profname + i - 2, "profile");
+      profile = fopen( profname, "rb");
+      }
+#endif
+
+#ifdef _WIN32              /* a couple of places to try in Win-world */
+   if( !profile)
+      profile = fopen( "c:\\ed\\profile", "rb");
+   if( !profile)
+      profile = fopen( "c:\\users\\john\\ed\\profile", "rb");
+#else                      /* ...and a couple to try in non-Win world */
    if( !profile)
       profile = fopen( "/usr/bin/profile", "rb");
    if( !profile)
@@ -308,8 +320,6 @@ int main( int argc, const char **argv)
       strcat( filename, "/ed/profile");
       profile = fopen( filename, "rb");
       }
-   if( !profile)
-      profile = fopen( "c:\\ed\\profile", "rb");
 #endif
    assert( profile);
    read_profile_file( NULL, profile);
