@@ -1088,7 +1088,7 @@ void use_key( EFILE **curr_file, int key)
       case KEY_F(8):     /* show original screens */
          endwin( );
          extended_getch( );
-//       initscr( );
+/*       initscr( );       */
          refresh( );
          full_refresh = 1;
          break;

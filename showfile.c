@@ -122,8 +122,8 @@ void show_efile( EFILE *efile)
    time_t t;
    static int size_alloced = 0;
 
-// snprintf( buf, sizeof( buf), "be %s", efile->filename);
-// PDC_set_title( buf);
+/* snprintf( buf, sizeof( buf), "be %s", efile->filename);
+   PDC_set_title( buf);       */
    size_needed = xscr * yscr + 1;
    if( !efile || size_needed > size_alloced)
       {
