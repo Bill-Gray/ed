@@ -8,13 +8,13 @@ CURSES_LIB=-lncursesw
 RM=rm -f
 
 ifdef X
- ADDED_CFLAGS=-DXCURSES -DPDC_WIDE -DPDC_FORCE_UTF8 -I../PDCurses
+ ADDED_CFLAGS=-DXCURSES -DPDC_WIDE -DPDC_FORCE_UTF8 -I../PDCursesMod
 	CURSES_LIB=-lXCurses -lXaw -lXmu -lXt -lX11 -lSM -lICE -lXext -lXpm
 endif
 
 ifdef VT
-	ADDED_CFLAGS=-DPDC_WIDE -DPDC_FORCE_UTF8 -DVT -I$(HOME)/PDCurses
-	CURSES_LIB=$(HOME)/PDCurses/vt/libpdcurses.a
+	ADDED_CFLAGS=-DPDC_WIDE -DPDC_FORCE_UTF8 -DVT -I$(HOME)/PDCursesMod
+	CURSES_LIB=$(HOME)/PDCursesMod/vt/libpdcurses.a
 endif
 
 ifdef W64
@@ -22,8 +22,8 @@ ifdef W64
  EXE=.exe
  LIB_DIR=$(INSTALL_DIR)/win_lib
  LIBSADDED=-L $(LIB_DIR) -mwindows
-	ADDED_CFLAGS=-DPDC_WIDE -DPDC_FORCE_UTF8 -I$(HOME)/PDCurses
-	CURSES_LIB=$(HOME)/PDCurses/wingui/pdcurses.a
+	ADDED_CFLAGS=-DPDC_WIDE -DPDC_FORCE_UTF8 -I$(HOME)/PDCursesMod
+	CURSES_LIB=$(HOME)/PDCursesMod/wingui/pdcurses.a
 endif
 
 ifdef CLANG
