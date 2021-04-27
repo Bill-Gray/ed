@@ -25,6 +25,7 @@ void set_video_mode( unsigned mode);      /* in BE.C */
 int sort_file( EFILE *efile, int start_x, int start_y, int n_lines, int order);
 void use_key( EFILE **curr_file, int key);
 int realloc_lines( EFILE *efile, int n);
+int xlate_key_string( const char *string, int *len);     /* keyhand.c */
 
 extern int display_mode;      /* in SHOWFILE.C */
 extern int full_refresh;      /* in SHOWFILE.C */
@@ -475,10 +476,9 @@ int handle_command( EFILE **curr_file, const char *comm)
          {
          if( c == '#')
             {
-            int xlate = atoi( tptr);
+            int len, xlate = xlate_key_string( tptr, &len);
 
-            while( *tptr >= '0' && *tptr <= '9')
-               tptr++;
+            tptr += len;
             use_key( curr_file, xlate);
             }
          else if( c != ' ')

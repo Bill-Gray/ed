@@ -41,11 +41,10 @@ static char prev_command[N_PREV_COMMANDS][80];
 extern int tabs[];      /* defined in COMMHAND.C */
 extern int display_mode;      /* in SHOWFILE.C */
 extern int full_refresh;      /* in SHOWFILE.C */
-extern int n_redefs;
-extern char **redefs_from, **redefs_to;
 int insert = 0;
 void set_video_mode( unsigned mode);      /* in BE.C */
 
+int xlate_key_string( const char *string, int *len);     /* keyhand.c */
 int handle_command( EFILE **curr_file, const char *comm);
 int realloc_lines( EFILE *efile, int n);
 int adjust_paragraph( EFILE *efile, int x, int y);   /* etools2.c */
@@ -185,15 +184,59 @@ static int is_a_c_function( EFILE *efile, int line_no)
    return( 0);
 }
 
+int xlate_key_string( const char *string, int *len)
+{
+   int rval = atoi( string);
+
+   if( len)
+      *len = 0;
+   if( *string == 'F')
+      {
+      string++;
+      rval = KEY_F( atoi( string));
+      if( len)
+         *len = 1;
+      }
+   else if( !memcmp( string, "Alt-", 4))
+      {
+      const char *remaps = "[];-=/", *tptr = strchr( remaps, string[4]);
+      const int keys[] = { ALT_LBRACKET, ALT_RBRACKET, ALT_SEMICOLON, ALT_MINUS,
+                          ALT_EQUAL, ALT_FSLASH };
+
+      if( string[4] >= 'A' && string[4] <= 'Z')
+         rval = ALT_A + string[4] - 'A';
+      if( string[4] >= '0' && string[4] <= '9')
+         rval = ALT_0 + string[4] - '0';
+      if( tptr)
+         rval = keys[tptr - remaps];
+      if( len)
+         *len = 5;
+      }
+   else if( !memcmp( string, "Up", 2))
+      {
+      rval = KEY_UP;
+      *len = 2;
+      }
+   if( len)
+      while( *string >= '0' && *string <= '9')
+         {
+         (*len)++;
+         string++;
+         }
+   return( rval);
+}
+
 void use_key( EFILE **curr_file, int key)
 {
    EFILE *efile;
    LINE *line;
    int i;
    static char errbuff[80];
+   extern int n_redefs;
+   extern char **redefs_from, **redefs_to;
 
    for( i = 0; i < n_redefs; i++)
-      if( redefs_from[i][0] == '#' && atoi( redefs_from[i] + 1) == key)
+      if( redefs_from[i][0] == '#' && xlate_key_string( redefs_from[i] + 1, NULL) == key)
          {
          handle_command( curr_file, redefs_to[i]);
          return;

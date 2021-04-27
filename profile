@@ -7,18 +7,15 @@ display=0
 ;random=c:\ed\rand
 cursor 8 2
 tabx 3
-redef e k d:err
-# DOS: redef #499 key #266 #9 { #266 } #259 #266
-redef #4155 key #266 #9 { #266 } #259 #266
+redef #Alt-; key #F2 #9 { #F2 } #Up #F2
 # The above should redef alt-; to insert a pair of braces...
-redef #284 key http://www.projectpluto.com
+# ...and the above does the same thing for PDCursesMod
+redef #F20 key http://www.projectpluto.com
 # The above redefs Shift-F8 to show my Web site...
 
-# redef #498 key #316 int_main(_const_int_argc,_const_char_**argv)
-redef #4157 key #316 int_main(_const_int_argc,_const_char_**argv)
+redef #Alt-] key #F2 int_main(_const_int_argc,_const_char_**argv)
 # The above remaps Alt-] to insert a default 'main' def
-# DOS: redef #485 key 3.1415926535897932384626433832795028841971693993751058209749445923
-redef #4189 key 3.1415926535897932384626433832795028841971693993751058209749445923
+redef #Alt-= key 3.1415926535897932384626433832795028841971693993751058209749445923
 
 default_mode=u    ;new files default to line-feed only endings
 tabs 0 3 6 9 12 15 18 21 24 27 30 33 36 39 42 45 48 51 54 57 60 63 66 69 72 75 78 81 84 87 90 93 96 99 102 105
