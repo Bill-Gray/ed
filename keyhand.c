@@ -1014,7 +1014,7 @@ void use_key( EFILE **curr_file, int key)
             if( key == ALT_Y)
                {
                FILE *test_file;
-               char filename[80];
+               char filename[110];
                int found_unused = 0;
 
                for( i = 1; i < 100 && !found_unused; i++)
