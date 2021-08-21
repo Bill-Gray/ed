@@ -96,3 +96,11 @@ something I've just not figured out yet.      */
 #define CTL_PAD6     0x0230
 #define CTL_PAD8     0x0236
 #define CTL_PAD9     0x022b
+
+#define ALT_LBRACKET   (ALT_BASE + '[')
+#define ALT_RBRACKET   (ALT_BASE + ']')
+#define ALT_SEMICOLON  (ALT_BASE + ';')
+#define ALT_MINUS      (ALT_BASE + '-')
+#define ALT_EQUAL      (ALT_BASE + '=')
+#define ALT_FSLASH     (ALT_BASE + '/')
+#define ALT_BSLASH     (ALT_BASE + '\\')
