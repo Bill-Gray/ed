@@ -397,6 +397,7 @@ int main( int argc, const char **argv)
 /*    c = curses_kbhit( );
 */    if( curses_kbhit( ) == ERR)
          show_efile( curr_file);
+      refresh( );
       c = extended_getch( );
       curr_file->message = NULL;
       use_key( &curr_file, c);
