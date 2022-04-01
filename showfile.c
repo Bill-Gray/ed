@@ -65,7 +65,7 @@ static void update_scr( void)
          move( i / xscr, i % xscr);
       prev_loc = end;
       if( attr != prev_attr)
-         attrset( COLOR_PAIR( attr & 15) | A_BOLD);
+         attrset( COLOR_PAIR( attr & 15));
       prev_attr = attr;
       for( j = 0; j < end - i; j++)
          {
