@@ -41,7 +41,7 @@ static int find_in_string( const LETTER *s, int max, const char *search,
                    const int case_sensitive, const int direction)
 {
    int j, loc;
-   const int len = strlen( search);
+   const int len = (int)strlen( search);
 
    if( !s)
       return( -1);
@@ -248,7 +248,7 @@ static int html_to_txt( LINE *line, int curr_state)
                              "&lt", "<",  "&gt", ">" };
 
          for( k = 0; k < 8; k += 2)
-            if( !memcmp( replacers[k], line->str + i, len = strlen( replacers[k])))
+            if( !memcmp( replacers[k], line->str + i, len = (int)strlen( replacers[k])))
                {
                line->str[i] = *replacers[k + 1];
                memmove( line->str + i + 1,
@@ -256,7 +256,7 @@ static int html_to_txt( LINE *line, int curr_state)
                         letter_strlen( line->str + i) * sizeof( LETTER));
                }
          }
-   line->size = letter_strlen( line->str);
+   line->size = (int)letter_strlen( line->str);
    return( curr_state);
 }
 
@@ -334,7 +334,7 @@ int handle_command( EFILE **curr_file, const char *comm)
 
    for( i = 0; i < n_redefs; i++)
       {
-      int len = strlen( redefs_from[i]);
+      const int len = (int)strlen( redefs_from[i]);
 
       if( !_memicmp( redefs_from[i], comm, len) &&
                    (comm[len] == ' ' || !comm[len]))
@@ -1085,7 +1085,7 @@ int read_profile_file( EFILE **curr_file, FILE *ifile)
       return( -1);
    while( fgets( str, 180, ifile))
       {
-      int len = strlen( str);
+      int len = (int)strlen( str);
 
       while( len && str[len - 1] < ' ')
          len--;
