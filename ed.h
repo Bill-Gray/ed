@@ -6,7 +6,7 @@
 EFILE
    {
    EFILE *next_file, *prev_file;
-   char *filename, command[80];
+   char *filename, command[480];
    const char *message;
    LINE *lines;
    int lines_alloced, n_lines, dirty;
