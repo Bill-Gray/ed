@@ -301,7 +301,7 @@ void use_key( EFILE **curr_file, int key)
                efile->command_loc = -1;
                }
             else if( mouse_event.y == efile->ystart + efile->ysize)
-               efile->command_loc = strlen( efile->command);
+               efile->command_loc = (int)strlen( efile->command);
             }
          }
          break;
@@ -437,7 +437,7 @@ void use_key( EFILE **curr_file, int key)
       case KEY_A1:
       case KEY_HOME:
          if( efile->command_loc == -1)
-            efile->command_loc = strlen( efile->command);
+            efile->command_loc = (int)strlen( efile->command);
          else
             efile->command_loc = -1;
          break;
@@ -808,6 +808,13 @@ void use_key( EFILE **curr_file, int key)
                block_x2++;
             }
          break;
+      case ALT_A:
+      case 'A' - 64:       /* Ctrl-A */
+         is_block = 0;
+         block_y1 = 0;
+         block_y2 = efile->n_lines - 1;
+         block_file = efile;
+         break;
       case ALT_L:
          {
          int y = efile->y;
@@ -986,7 +993,7 @@ void use_key( EFILE **curr_file, int key)
                {
                char *path = efile->filename + 10;
 
-               for( i = strlen( path); i && path[i-1] != '\\'
+               for( i = (int)strlen( path); i && path[i-1] != '\\'
                                          && path[i-1] != ':'; i--)
                memcpy( comm_loc, path, i);
                comm_loc += i;
@@ -1125,7 +1132,7 @@ void use_key( EFILE **curr_file, int key)
             while( !prev_command[queue][0])     /* look for a 'real' command */
                queue = (queue + offset) % N_PREV_COMMANDS;
             strcpy( efile->command, prev_command[queue]);
-            efile->command_loc = strlen( efile->command);
+            efile->command_loc = (int)strlen( efile->command);
             }
          break;
       case KEY_F(8):     /* show original screens */
