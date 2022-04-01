@@ -245,7 +245,7 @@ int main( int argc, const char **argv)
 #else
    initscr( );
 #endif
-   mousemask( BUTTON1_PRESSED, NULL);
+   mousemask( BUTTON1_PRESSED | BUTTON1_CLICKED, NULL);
    cbreak( );
    noecho( );
    clear( );
