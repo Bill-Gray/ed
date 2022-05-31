@@ -345,28 +345,22 @@ int write_efile( EFILE *efile)
          obuff = (char *)malloc( curr_len + 10);
          }
 
-      if( sizeof( LETTER) == 1)        /* no fancy stuff w/attributes */
+      for( out_loc = j = 0; j < len; j++)    /* simple UTF8 encoding for BMP */
          {
-         memcpy( obuff, s, len);
-         out_loc = len;
-         }
-      else
-         for( out_loc = j = 0; j < len; j++)
+         if( s[j] < 0x80)
+            obuff[out_loc++] = (char)s[j];
+         else if( s[j] < 0x0800)
             {
-            if( s[j] < 0x80)
-               obuff[out_loc++] = (char)s[j];
-            else if( s[j] < 0x0800)
-               {
-               obuff[out_loc++] = (char)( 0xc0 | (s[j] >> 6));
-               obuff[out_loc++] = (char)( 0x80 | (s[j] & 0x3f));
-               }
-            else if( s[j] < 0x10000)
-               {
-               obuff[out_loc++] = (char)( 0xe0 | (s[j] >> 12));
-               obuff[out_loc++] = (char)( 0x80 | ((s[j] >> 6) & 0x3f));
-               obuff[out_loc++] = (char)( 0x80 | (s[j] & 0x3f));
-               }
+            obuff[out_loc++] = (char)( 0xc0 | (s[j] >> 6));
+            obuff[out_loc++] = (char)( 0x80 | (s[j] & 0x3f));
             }
+         else if( s[j] < 0x10000)
+            {
+            obuff[out_loc++] = (char)( 0xe0 | (s[j] >> 12));
+            obuff[out_loc++] = (char)( 0x80 | ((s[j] >> 6) & 0x3f));
+            obuff[out_loc++] = (char)( 0x80 | (s[j] & 0x3f));
+            }
+         }
       if( efile->dos_mode)
          {
          obuff[out_loc++] = 13;
