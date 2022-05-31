@@ -83,7 +83,7 @@ static int find_in_string( const LETTER *s, int max, const char *search,
    return( -1);
 }
 
-#if !defined( _WIN32)
+#if !defined( _WIN32) && !defined( __WATCOMC__)
 int _memicmp( const char *s1, const char *s2, int n)
 {
    int c1, c2;

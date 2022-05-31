@@ -9,7 +9,7 @@
    #define PDC_DLL_BUILD
 #endif
 
-#ifdef PDC_WIDE
+#if defined( PDC_WIDE) || defined( __WATCOMC__)
    #include "curses.h"
 #else
    #define _XOPEN_SOURCE_EXTENDED 1
@@ -69,11 +69,19 @@ static void update_scr( void)
       prev_attr = attr;
       for( j = 0; j < end - i; j++)
          {
+#ifdef PDC_WIDE
          wchar_t c_out = (wchar_t)( new_scr[j + i] & CHAR_MASK);
+#else
+         char c_out = (char)( new_scr[j + i] & CHAR_MASK);
+#endif
 
          if( !c_out || c_out == 9 || c_out == 13)
             c_out = ' ';
+#ifdef PDC_WIDE
          addnwstr( &c_out, 1);
+#else
+         addnstr( &c_out, 1);
+#endif
          }
       i = end;
       }

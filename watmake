@@ -1,0 +1,48 @@
+we.exe:  be.obj commhand.obj etools.obj etools2.obj keyhand.obj showfile.obj undo.obj curs_ext.obj mergesrt.obj
+  wlink name we.exe option map=be.map @we.lnk >> d:\err
+  type d:\err
+
+#CFLAGS=-DMS_DOS -ox -w4 -I.. -I\myincl -zq
+#CFLAGS=-DMS_DOS -ox -w4 -I.. -I\pdcurses -4r -s -zq -dDEBUG_MEM
+CFLAGS=-DMS_DOS -ox -w4 -4r -s -j -zq -I\PDCursesMod
+
+be.obj:             be.c ed.h
+   wcc386  $(CFLAGS) be.c >> d:\err
+   type d:\err
+
+commhand.obj:       commhand.c ed.h
+   wcc386  $(CFLAGS) commhand.c >> d:\err
+   type d:\err
+
+etools.obj:         etools.c ed.h
+   wcc386  $(CFLAGS) etools.c >> d:\err
+   type d:\err
+
+etools2.obj:        etools2.c ed.h
+   wcc386  $(CFLAGS) etools2.c >> d:\err
+   type d:\err
+
+keyhand.obj:        keyhand.c ed.h
+   wcc386  $(CFLAGS) keyhand.c >> d:\err
+   type d:\err
+
+showfile.obj:       showfile.c ed.h
+   wcc386  $(CFLAGS) showfile.c >> d:\err
+   type d:\err
+
+undo.obj:           undo.c ed.h
+   wcc386  $(CFLAGS) undo.c >> d:\err
+   type d:\err
+
+mycurses.obj:       \find_orb\mycurses.cpp
+   wcc386  $(CFLAGS) \find_orb\mycurses.cpp >> d:\err
+   type d:\err
+
+curs_ext.obj:       \utils\curs_ext.cpp
+   wcc386  $(CFLAGS) \utils\curs_ext.cpp >> d:\err
+   type d:\err
+
+mergesrt.obj:        \sort\mergesrt.cpp
+   wcc386  $(CFLAGS) \sort\mergesrt.cpp >> d:\err
+   type d:\err
+
