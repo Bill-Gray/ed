@@ -252,10 +252,12 @@ int main( int argc, const char **argv)
    raw( );
    refresh( );
    start_color( );
+   use_default_colors( );
+   init_pair( 0, -1, -1);
 /*   if (can_change_color())          set yellow to be more 'orangish'
         init_color( COLOR_YELLOW, 1000, 500, 0);         */
    init_color( COLOR_WHITE, 1000, 1000, 1000);
-   init_pair( 0, COLOR_WHITE, COLOR_BLACK);
+// init_pair( 0, COLOR_WHITE, COLOR_BLACK);
    init_pair( 1, COLOR_BLACK, COLOR_WHITE);
    init_pair( 2, COLOR_WHITE, COLOR_YELLOW);
    init_pair( 3, COLOR_WHITE, COLOR_BLUE);
@@ -271,10 +273,8 @@ int main( int argc, const char **argv)
    init_pair( 13, COLOR_BLACK, COLOR_MAGENTA);
    init_pair( 14, COLOR_WHITE, COLOR_WHITE);
    init_pair( 15, COLOR_RED, COLOR_WHITE);
-#ifdef PDCURSES
-#ifdef PDC_VER_MAJOR   /* so far only seen in 4.0+ */
+#if defined( PDC_VER_MAJOR) && !defined( __WATCOMC__)
     PDC_set_resize_limits( 20, 50, 70, 200);
-#endif
 #endif
 
    keypad( stdscr, 1);
