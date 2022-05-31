@@ -14,7 +14,12 @@ endif
 
 ifdef VT
 	ADDED_CFLAGS=-DPDC_WIDE -DPDC_FORCE_UTF8 -DVT -I$(HOME)/PDCursesMod
-	CURSES_LIB=$(HOME)/PDCursesMod/vt/libpdcurses.a
+	CURSES_LIB=-lpdcurses
+endif
+
+ifdef FB
+	ADDED_CFLAGS=-DPDC_WIDE -DPDC_FORCE_UTF8 -DVT -I$(HOME)/PDCursesMod
+	CURSES_LIB=$(HOME)/PDCursesMod/fb/libpdcurses.a
 endif
 
 ifdef W64
