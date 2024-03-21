@@ -292,7 +292,7 @@ int whatsis_idx( const LINE *line, int x)
       return( COMMENT_START);
    if( *tptr == '/' && tptr[1] == '*')
       return( COMMENT_START);
-   for( i = 0; whats[i] && whats[i] != (char)*tptr; i++)
+   for( i = 0; whats[i] && (LETTER)whats[i] != *tptr; i++)
       ;
    if( !whats[i])
       i = -1;
@@ -346,7 +346,7 @@ static int find_matching_html_tag( EFILE *efile)
 
 int find_matching_whatsis( EFILE *efile)
 {
-   char c1, c;
+   LETTER c1, c;
    LINE *line;
    int i, x, y, count = 1;
 
@@ -377,8 +377,8 @@ int find_matching_whatsis( EFILE *efile)
    if( i == COMMENT_END)
       return( find_occurrence_and_move( efile, "/*", 0, -1, 0));
 
-   c = whats[i];
-   c1 = whats[i ^ 1];
+   c = (LETTER)whats[i];
+   c1 = (LETTER)whats[i ^ 1];
    if( i & 1)     /* search backwards */
       {
       for( y = efile->y; y > -1; y--)
@@ -391,10 +391,10 @@ int find_matching_whatsis( EFILE *efile)
                x = line->size;
             line->str[line->size] = '\0';
             while( x--)
-               if( (char)line->str[x] == c &&
+               if( line->str[x] == c &&
                                    whatsis_idx( line, x) != -1)
                   count++;
-               else if( (char)line->str[x] == c1 &&
+               else if( line->str[x] == c1 &&
                                    whatsis_idx( line, x) != -1)
                   {
                   count--;
@@ -418,10 +418,10 @@ int find_matching_whatsis( EFILE *efile)
                x = -1;
             line->str[line->size] = '\0';
             while( ++x < line->size)
-               if( (char)line->str[x] == c &&
+               if( line->str[x] == c &&
                                    whatsis_idx( line, x) != -1)
                   count++;
-               else if( (char)line->str[x] == c1 &&
+               else if( line->str[x] == c1 &&
                                    whatsis_idx( line, x) != -1)
                   {
                   count--;
