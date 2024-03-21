@@ -38,7 +38,6 @@ int read_profile_file( EFILE **curr_file, FILE *ifile);
 void update_clock( void);
 void set_video_mode( unsigned mode);      /* in BE.C */
 
-char *bitfont;             /* used in VGA modes */
 #ifdef __WATCOMC__
 int min_line_realloc = 15000;
 #else
@@ -267,11 +266,11 @@ int main( int argc, const char **argv)
    init_pair( 7, COLOR_BLACK, COLOR_RED);
    init_pair( 8, COLOR_WHITE, COLOR_CYAN);
    init_pair( 9, COLOR_BLACK, COLOR_YELLOW);
-   init_pair( 10, COLOR_RED, COLOR_WHITE);
+   init_pair( 10, COLOR_WHITE, COLOR_MAGENTA);
    init_pair( 11, COLOR_BLACK, COLOR_CYAN);
    init_pair( 12, COLOR_BLUE, COLOR_WHITE);
    init_pair( 13, COLOR_BLACK, COLOR_MAGENTA);
-   init_pair( 14, COLOR_WHITE, COLOR_WHITE);
+   init_pair( 14, COLOR_MAGENTA, COLOR_WHITE);
    init_pair( 15, COLOR_RED, COLOR_WHITE);
 #if defined( PDC_VER_MAJOR) && !defined( __WATCOMC__)
     PDC_set_resize_limits( 20, 50, 70, 200);
