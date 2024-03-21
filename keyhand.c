@@ -77,6 +77,10 @@ static int bisearch( const int ucs, const struct interval *table, int max)
   return 0;
 }
 
+#ifdef __PDCURSESMOD__
+bool PDC_is_function_key( const int key);
+#endif
+
 static int mk_wcwidth( const int ucs)
 {
   /* sorted list of non-overlapping intervals of non-spacing characters */
@@ -1197,7 +1201,11 @@ void use_key( EFILE **curr_file, int key)
             }
          }        /* FALLTHRU */
       default:                      /* text entered */
-         if( mk_wcwidth( key) == 1 || key == 9)
+#ifdef __PDCURSESMOD__
+         if( !PDC_is_function_key( key) && (mk_wcwidth( key) == 1 || key == 9))
+#else
+         if(  mk_wcwidth( key) == 1 || key == 9)
+#endif
             {
             if( efile->command_loc == -1)
                {
